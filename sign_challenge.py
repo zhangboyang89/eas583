@@ -20,7 +20,7 @@ def sign_challenge(challenge):
         msg, signature=sig.signature.hex()
     ) == addr, f"Failed to sign message properly"
 
-    return addr, sig
+    return addr, sig.signature.hex()
 
 
 if __name__ == "__main__":
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     eth_encoded_msg = eth_account.messages.encode_defunct(text=challenge)
 
     if eth_account.Account.recover_message(
-            eth_encoded_msg, signature=sig.signature.hex()) == addr:
+            eth_encoded_msg, signature=sig) == addr:
         print(f"Success: signed the challenge {challenge} using address {addr}!")
     else:
         print(f"Failure: The signature does not verify!")
