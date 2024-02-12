@@ -27,13 +27,14 @@ contract Destination is AccessControl {
 		require(wrappedTokenAddress != address(0), "Underlying asset not registered");
 
 		BridgeToken wrappedToken = BridgeToken(wrappedTokenAddress);
-	    wrappedToken.mint(_recipient, _amount);
+		wrappedToken.mint(_recipient, _amount);
 
 		emit Wrap(_underlying_token, wrappedTokenAddress, _recipient, _amount);
 	}
 
 	function unwrap(address _wrapped_token, address _recipient, uint256 _amount ) public {
 		require(wrapped_tokens[_wrapped_token] != address(0), "Wrapped asset not registered");
+		require(BridgeToken(_wrapped_token).balanceOf(msg.sender) >= _amount, "Insufficient balance");
 
 		BridgeToken(_wrapped_token).burnFrom(msg.sender, _amount);
 
@@ -48,6 +49,7 @@ contract Destination is AccessControl {
 		address newTokenAddress = address(newToken);
 
 		underlying_tokens[_underlying_token] = newTokenAddress;
+		wrapped_tokens[newTokenAddress] = _underlying_token;
 		tokens.push(newTokenAddress);
 
 		emit Creation(_underlying_token, newTokenAddress);
