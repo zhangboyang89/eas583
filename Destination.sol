@@ -26,7 +26,7 @@ contract Destination is AccessControl {
 		address wrappedTokenAddress = underlying_tokens[_underlying_token];
 		require(wrappedTokenAddress != address(0), "Underlying asset not registered");
 
-		BridgeToken(wrappedToken = BridgeToken(wrappedTokenAddress));
+		BridgeToken wrappedToken = BridgeToken(wrappedTokenAddress);
 		wrappedToken.mint(_recipient, _amount);
 
 		emit Wrap(_underlying_token, wrappedTokenAddress, _recipient, _amount);
