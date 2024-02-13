@@ -42,18 +42,18 @@ contract Destination is AccessControl {
 	}
 
 	function createToken(address _underlying_token, string memory name, string memory symbol ) public onlyRole(CREATOR_ROLE) returns(address) {
-		require(underlying_tokens[_underlying_token] == address(0), "Asset already registered");
-
-		BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, msg.sender);
-		address newTokenAddress = address(newToken);
-
-		underlying_tokens[_underlying_token] = newTokenAddress;
-		wrapped_tokens[newTokenAddress] = _underlying_token;
-		tokens.push(newTokenAddress);
-
-		emit Creation(_underlying_token, newTokenAddress);
-
-		return newTokenAddress;
+//		require(underlying_tokens[_underlying_token] == address(0), "Asset already registered");
+//
+//		BridgeToken newToken = new BridgeToken(_underlying_token, name, symbol, msg.sender);
+//		address newTokenAddress = address(newToken);
+//
+//		underlying_tokens[_underlying_token] = newTokenAddress;
+//		wrapped_tokens[newTokenAddress] = _underlying_token;
+//		tokens.push(newTokenAddress);
+//
+//		emit Creation(_underlying_token, newTokenAddress);
+//
+//		return newTokenAddress;
 	}
 
 }
