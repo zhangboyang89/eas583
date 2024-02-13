@@ -37,7 +37,7 @@ contract Destination is AccessControl {
 		BridgeToken wrappedToken = BridgeToken(_wrapped_token);
 		require(wrappedToken.balanceOf(msg.sender) >= _amount, "Insufficient balance");
 
-		wrappedToken.burn(msg.sender, _amount);
+		wrappedToken.burn(_amount);
 
 		emit Unwrap(wrapped_tokens[_wrapped_token], _wrapped_token, msg.sender, _recipient, _amount);
 	}
