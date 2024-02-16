@@ -9,7 +9,6 @@ contract Source is AccessControl {
     bytes32 public constant WARDEN_ROLE = keccak256("BRIDGE_WARDEN_ROLE");
 	mapping( address => bool) public approved;
 	address[] public tokens;
-	mapping(address => mapping(address => uint256)) public userDeposits;
 
 	event Deposit( address indexed token, address indexed recipient, uint256 amount );
 	event Withdrawal( address indexed token, address indexed recipient, uint256 amount );
@@ -23,19 +22,13 @@ contract Source is AccessControl {
 	function deposit(address _token, address _recipient, uint256 _amount ) public {
 		require(approved[_token], "Token not registered");
 		require(ERC20(_token).transferFrom(msg.sender, address(this), _amount), "Transfer failed");
-		userDeposits[_recipient][_token] += _amount;
 		emit Deposit(_token, _recipient, _amount);
 
 	}
 
-	function withdraw(address _token, address _recipient, uint256 _amount ) onlyRole(WARDEN_ROLE) public {
+	function withdraw(address _token, address _recipient, uint256 _amount ) public {
+		require(hasRole(WARDEN_ROLE, _msgSender()) || hasRole(ADMIN_ROLE, _msgSender()), "Caller is not a warden or admin");
 		require(approved[_token], "Token not registered");
-
-		require(userDeposits[_recipient][_token] >= _amount, "Insufficient balance");
-
-		// Deduct the withdrawn amount from the user's deposited balance
-		userDeposits[_recipient][_token] -= _amount;
-
 		require(ERC20(_token).transfer(_recipient, _amount), "Transfer failed");
     	emit Withdrawal(_token, _recipient, _amount);
 	}
