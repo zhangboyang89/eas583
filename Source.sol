@@ -26,16 +26,16 @@ contract Source is AccessControl {
 	}
 
 	function withdraw(address _token, address _recipient, uint256 _amount ) onlyRole(WARDEN_ROLE) public {
-		require(approved[_token], "Token not registered");
-		require(ERC20(_token).transfer(_recipient, _amount), "Transfer failed");
-    	emit Withdrawal(_token, _recipient, _amount);
+//		require(approved[_token], "Token not registered");
+//		require(ERC20(_token).transfer(_recipient, _amount), "Transfer failed");
+//    	emit Withdrawal(_token, _recipient, _amount);
 	}
 
 	function registerToken(address _token) onlyRole(ADMIN_ROLE) public {
-//		require(!approved[_token], "Token already registered");
-//		approved[_token] = true;
-//		tokens.push(_token);
-//		emit Registration(_token);
+		require(!approved[_token], "Token already registered");
+		approved[_token] = true;
+		tokens.push(_token);
+		emit Registration(_token);
 	}
 
 
