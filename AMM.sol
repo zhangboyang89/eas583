@@ -48,47 +48,28 @@ contract AMM is AccessControl{
 		The contract must calculate buyAmount using the formula:
 	*/
 	function tradeTokens( address sellToken, uint256 sellAmount ) public {
-		require( invariant > 0, 'Invariant must be nonzero' );
-		require( sellToken == tokenA || sellToken == tokenB, 'Invalid token' );
-		require( sellAmount > 0, 'Cannot trade 0' );
-		require( invariant > 0, 'No liquidity' );
-		uint256 qtyA;
-		uint256 qtyB;
-		uint256 swapAmt;
+		require(invariant > 0, 'Invariant must be nonzero');
+		require(sellToken == tokenA || sellToken == tokenB, 'Invalid token');
+		require(sellAmount > 0, 'Cannot trade 0');
 
-		//YOUR CODE HERE
 		ERC20 sellTokenInstance = ERC20(sellToken);
-		ERC20 buyTokenInstance = sellToken == tokenA ? ERC20(tokenB) : ERC20(tokenA);
+		ERC20 buyTokenInstance = ERC20(sellToken == tokenA ? tokenB : tokenA);
 
-		// Calculate the fee and the amount after fee deduction
-		uint256 feeAmount = (sellAmount * feebps) / 10000;
-		uint256 sellAmountAfterFee = sellAmount - feeAmount;
-
-		// Get the current reserves
+		// Directly use balances in the calculations to reduce local variables
 		uint256 sellTokenReserve = sellTokenInstance.balanceOf(address(this));
 		uint256 buyTokenReserve = buyTokenInstance.balanceOf(address(this));
+		uint256 feeAmount = (sellAmount * feebps) / 10000;
 
-		// Calculate the amount of buyToken to be sent using the constant product formula
-		// newSellTokenReserve * newBuyTokenReserve = invariant
-		// newSellTokenReserve = sellTokenReserve + sellAmountAfterFee
-		// Solve for newBuyTokenReserve, then find the difference between newBuyTokenReserve and buyTokenReserve
-		uint256 newSellTokenReserve = sellTokenReserve + sellAmountAfterFee;
-		uint256 newBuyTokenReserve = invariant / newSellTokenReserve;
-		uint256 buyAmount = buyTokenReserve - newBuyTokenReserve;
+		// Inline calculation for sellAmountAfterFee to reduce variables
+		uint256 buyAmount = buyTokenReserve - (invariant / (sellTokenReserve + (sellAmount - feeAmount)));
 
 		require(buyAmount > 0, "Insufficient output amount");
-
-		// Transfer sellToken from sender to contract
 		require(sellTokenInstance.transferFrom(msg.sender, address(this), sellAmount), "Failed to transfer sell tokens");
-
-		// Transfer buyToken from contract to sender
 		require(buyTokenInstance.transfer(msg.sender, buyAmount), "Failed to transfer buy tokens");
 
-
-
-		uint256 new_invariant = ERC20(tokenA).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this));
-		require( new_invariant >= invariant, 'Bad trade' );
-		invariant = new_invariant;
+		// Update invariant directly to minimize variable usage
+		invariant = (sellTokenReserve + (sellAmount - feeAmount)) * (buyTokenReserve - buyAmount);
+		require(invariant >= sellTokenReserve * buyTokenReserve, 'Bad trade');
 
 		emit Swap(sellToken, address(buyTokenInstance), sellAmount, buyAmount);
 	}
