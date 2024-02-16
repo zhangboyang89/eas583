@@ -69,7 +69,7 @@ contract Attacker is AccessControl, IERC777Recipient {
 			depth++;
 			emit Recurse(depth);
 
-			// Recursively call claimAll to continue the reentrancy attack
+			// Recursively call claimAll
 			bank.claimAll();
     }
 	}
