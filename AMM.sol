@@ -67,11 +67,6 @@ contract AMM is AccessControl{
 		require(sellTokenInstance.transferFrom(msg.sender, address(this), sellAmount), "Failed to transfer sell tokens");
 		require(buyTokenInstance.transfer(msg.sender, buyAmount), "Failed to transfer buy tokens");
 
-//		// Update invariant directly to minimize variable usage
-//		invariant = (sellTokenReserve + (sellAmount - feeAmount)) * (buyTokenReserve - buyAmount);
-//		require(invariant >= sellTokenReserve * buyTokenReserve, 'Bad trade');
-//
-
 		uint256 new_invariant = ERC20(tokenA).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this));
 		require( new_invariant >= invariant, 'Bad trade' );
 		invariant = new_invariant;
