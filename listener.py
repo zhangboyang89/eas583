@@ -64,8 +64,8 @@ def scanBlocks(chain,start_block,end_block,contract_address):
                 writer.writerow([
                     chain,
                     contract_address,  # Assuming the contract address is the token address
-                    evt.args['receiver'],
-                    evt.args['value'],
+                    evt.args['recipient'],
+                    evt.args['amount'],
                     evt.transactionHash.hex(),
                     evt.address
                 ])
@@ -79,8 +79,8 @@ def scanBlocks(chain,start_block,end_block,contract_address):
                     writer.writerow([
                         chain,
                         contract_address,  # Assuming the contract address is the token address
-                        evt.args['receiver'],
-                        evt.args['value'],
+                        evt.args['recipient'],
+                        evt.args['amount'],
                         evt.transactionHash.hex(),
                         evt.address
                     ])
