@@ -8,6 +8,7 @@ def signChallenge(challenge):
 
     # This is the only line you need to modify
     sk = "0x152d1949e8feacbf4a75acfe0679930a4c9d1bb57d88246b16aeca8627e1067b"
+    address = '0xa6f7932e3753D6C935D82B208bc7EC9D733F3B48'
 
     acct = w3.eth.account.from_key(sk)
 
