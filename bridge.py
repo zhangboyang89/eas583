@@ -142,6 +142,8 @@ def scanBlocks(chain):
         event_filter = contract.events.Deposit.create_filter(fromBlock=start_block, toBlock=end_block,
                                                              argument_filters=arg_filter)
         events = event_filter.get_all_entries()
+        if len(events) > 0:
+            print('Found something!')
         for evt in events:
             call_wrap_function(evt.args['token'], evt.args['recipient'], evt.args['amount'])
 
@@ -151,12 +153,14 @@ def scanBlocks(chain):
         contract = w3_source.eth.contract(address=contract_address, abi=destination_contract_abi)
 
         arg_filter = {}
-        end_block = w3_source.eth.get_block_number()
+        end_block = w3_destination.eth.get_block_number()
         start_block = end_block - 5
         print(f"Scanning blocks {start_block} - {end_block} on {chain}")
         event_filter = contract.events.Unwrap.create_filter(fromBlock=start_block, toBlock=end_block,
                                                             argument_filters=arg_filter)
         events = event_filter.get_all_entries()
+        if len(events) > 0:
+            print('Found something!')
         for evt in events:
             call_withdraw_function(evt.args['token'], evt.args['recipient'], evt.args['amount'])
 
