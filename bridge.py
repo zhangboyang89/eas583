@@ -73,7 +73,7 @@ def scanBlocks(chain):
         nonce = w3_destination.eth.get_transaction_count(warden_account_destination.address)
         tx = destination_contract.functions.wrap(token_address, recipient_address, amount).build_transaction({
             'chainId': 97,
-            'gas': 2000000,
+            'gas': 200000000,
             'gasPrice': w3_destination.eth.gas_price,
             'nonce': nonce,
         })
@@ -86,7 +86,7 @@ def scanBlocks(chain):
         # Build the transaction to call the `withdraw` function
         tx = source_contract.functions.withdraw(token_address, recipient_address, amount).build_transaction({
             'chainId': 43113,
-            'gas': 2000000,
+            'gas': 200000000,
             'gasPrice': w3_source.eth.gas_price,
             'nonce': nonce,
         })
