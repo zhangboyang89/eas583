@@ -84,10 +84,6 @@ def scanBlocks(chain):
     w3_source = connectTo('avax')
     w3_destination = connectTo('bsc')
 
-    # Inject POA middleware for testnets that use Proof of Authority
-    w3_source.middleware_onion.inject(geth_poa_middleware, layer=0)
-    w3_destination.middleware_onion.inject(geth_poa_middleware, layer=0)
-
     # Load contract ABIs and addresses
     source_contract_abi = getContractInfo('source')['abi']
     destination_contract_abi = getContractInfo('destination')['abi']
