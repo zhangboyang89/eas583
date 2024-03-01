@@ -112,6 +112,7 @@ def scanBlocks(chain):
                                                              argument_filters=arg_filter)
         events = event_filter.get_all_entries()
         for evt in events:
+            print(evt.args['token'], evt.args['recipient'], evt.args['amount'])
             call_wrap_function(evt.args['token'], evt.args['recipient'], evt.args['amount'])
 
     elif chain == 'destination':
@@ -126,6 +127,7 @@ def scanBlocks(chain):
                                                             argument_filters=arg_filter)
         events = event_filter.get_all_entries()
         for evt in events:
+            print(evt.args['token'], evt.args['recipient'], evt.args['amount'])
             call_withdraw_function(evt.args['token'], evt.args['recipient'], evt.args['amount'])
 
 #
