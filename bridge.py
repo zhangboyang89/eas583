@@ -133,7 +133,7 @@ def scanBlocks(chain):
     if chain == 'source':
         event_abi = getContractABI(chain)
         contract_address = getContractInfo(chain)['address']
-        contract = w3_source.eth.contract(address=contract_address, abi=event_abi)
+        contract = w3_source.eth.contract(address=contract_address, abi=source_contract_abi)
 
         arg_filter = {}
         end_block = w3_source.eth.get_block_number()
@@ -148,7 +148,7 @@ def scanBlocks(chain):
     elif chain == 'destination':
         event_abi = getContractABI(chain)
         contract_address = getContractInfo(chain)['address']
-        contract = w3_source.eth.contract(address=contract_address, abi=event_abi)
+        contract = w3_source.eth.contract(address=contract_address, abi=destination_contract_abi)
 
         arg_filter = {}
         end_block = w3_source.eth.get_block_number()
